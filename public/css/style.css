@@ -1,17 +1,68 @@
 
-* {
+*, *::before, *::after {
     padding: 0;
     margin: 0;
 }
 
-#ts-canvas {
-    z-index: 0;
-
-    position: fixed;
-    width: 100%;
+:root {
+    --bg: #000000;
+    --surface: #ffffff;
 }
 
-tss {
+body {
+    background-color: var(--bg);
+}
+
+#tsViewport {
+    width: 100vw;
+    height: 100vh;
+
+    overflow: hidden;
+    position: relative;
+    cursor: default;
+}
+
+#tsViewport.drawing {
+    cursor: crosshair;
+}
+
+#tsViewport.grabbing {
+    cursor: grabbing;
+}
+
+#tsViewport.grabbing {
+    cursor: cell;
+}
+
+#tsWorld {
+    position: absolute;
+    
+    background-color: var(--surface);
+    border-radius: 4px;
+    transform-origin: 0 0;
+}
+
+#tsCanvasBg {
+    position: absolute;
+
+    inset: 0;
+
+    width: 1000px;
+    height: 1000px;
+    background-color: var(--surface);
+}
+
+#tsCanvas {
+    position: absolute;
+
+    inset: 0;
+
+    width: 1000px;
+    height: 1000px;
+    touch-action: none;
+}
+
+/* tss {
     position: absolute;
     z-index: 10;
 
@@ -39,5 +90,5 @@ tss tsss tssss:not(:first-child) {
 }
 
 tss tsss tssss:hover {
-    background-color: aliceblue;
-}
+    background-color: rgb(7, 7, 7);
+} */

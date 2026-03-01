@@ -8,16 +8,20 @@
     <link rel="stylesheet" href="/public/css/style.css">
 </head>
 <body>
-    <tss>
-        <tsss>
-            <tssss onclick="ts_painter()"></tssss>
-            <tssss onclick="ts_eraser()"></tssss>
-        </tsss>
-    </tss>
-    <ts>
-        <canvas id="ts-canvas" width="1080" height="720"></canvas>
-    </ts>
+    <div id="tsViewport">
+        <div id="tsWorld">
+            <div id="tsCanvasBg"></div>
+            <svg id="tsCanvas" width="1000" height="1000"></svg>
+        </div>
+    </div>
 
-    <script src="/public/paint.js"></script>
+    <div>
+        <div>
+            <div onclick="setTool('draw')"></div>
+            <div onclick="setTool('eraser')"></div>
+        </div>
+    </div>
+
+    <script src="/public/js/paint.js"></script>
 </body>
 </html>

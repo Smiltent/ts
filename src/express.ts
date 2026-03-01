@@ -14,7 +14,7 @@ export default class ExpressService {
         this.app.use("/public", express.static("public"))
 
         this.app.listen(3000, () => {
-            console.log("hi")
+            console.log("Server running on http://0.0.0.0:3000")
         })
     }
 }
