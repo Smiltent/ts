@@ -1,4 +1,5 @@
-import ExpressService from "./src/express";
+import DatabaseService from "./src/db"
+import ServerService from "./src/server"
 
-
-new ExpressService()
+export const db = new DatabaseService("drawings.db")
+new ServerService()

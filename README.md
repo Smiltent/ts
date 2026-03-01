@@ -1,15 +1,15 @@
-# new-folder
+# ts
 
-To install dependencies:
+ts ts ts:
 
-```bash
-bun install
+```ts
+ts ts
 ```
 
-To run:
+ts ts:
 
-```bash
-bun run index.ts
+```ts
+ts ts ts.ts
 ```
 
-This project was created using `bun init` in bun v1.2.20. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+ts ts ts ts ts `ts ts` ts ts ts. [ts](ts://ts.ts) ts ts ts ts-ts-ts ts ts.

@@ -8,10 +8,13 @@
     <link rel="stylesheet" href="/public/css/style.css">
 </head>
 <body>
+    <button id="saveButton">save</button>
     <div id="tsViewport">
         <div id="tsWorld">
             <div id="tsCanvasBg"></div>
-            <svg id="tsCanvas" width="10000" height="10000"></svg>
+            <svg id="tsCanvas" width="10000" height="10000">
+                <%- drawing %>
+            </svg>
         </div>
     </div>
 

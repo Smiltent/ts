@@ -66,7 +66,7 @@ function init() {
     const vw = window.innerWidth
     const vh = window.innerHeight
 
-    scale = Math.min(vw / tsCanvasWidth, vh / tsCanvasHeight)
+    scale = Math.min(vw / tsCanvasWidth, vh / tsCanvasHeight) * 5
     panX = (vw - tsCanvasWidth * scale) / 2
     panY = (vh - tsCanvasHeight * scale) / 2
 
@@ -333,3 +333,23 @@ tsViewport.addEventListener('wheel', e => {
 
 setTool("draw")
 init()
+
+// administrator saving (must be authenticated)
+document.getElementById("saveButton")?.addEventListener("click", async () => {
+    const data = tsCanvas.innerHTML
+
+    const res = await fetch(`/d/save`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ svg: data })
+    })
+
+    if (res.ok) {
+        alert("Saved successfully!")
+        window.location.reload()
+    } else {
+        alert("Failed to save!")
+    }
+})
