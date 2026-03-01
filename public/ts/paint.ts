@@ -28,8 +28,8 @@ const tsViewport = document.getElementById("tsViewport") as HTMLElement
 const tsWorld = document.getElementById("tsWorld") as HTMLElement
 
 // state
-const tsCanvasWidth: number = 1000
-const tsCanvasHeight: number = 1000
+const tsCanvasWidth: number = 10000
+const tsCanvasHeight: number = 10000
 const tsScaleMin: number = 0.08
 const tsScaleMax: number = 8
 const tsEraserScreenPx: number = 18
@@ -57,17 +57,9 @@ function screenToCanvas(x: number, y: number): Coord {
     }
 }
 
-// function smoothStep(t: number) {
-//     return t * t * (3 - 2 * t)
-// }
-
 function width(baseWidth: number) {
     return baseWidth * 0.5
 }
-
-// function toCanvasSize(w: number) {
-//     return w * scale
-// }
 
 // methods
 function init() {
@@ -104,93 +96,6 @@ function zoom(factor: number, x: number, y: number) {
     applyTransform()
 }
 
-// function catmullSeg(c: CanvasRenderingContext2D, p0: Coord, p1: Coord, p2: Coord, p3: Coord) {
-//     const t = 0.5
-
-//     // idk if its correct..?
-//     c.bezierCurveTo(
-//         p1.x + (p2.x - p0.x) / 6 * t * 2,
-//         p1.y + (p2.y - p0.y) / 6 * t * 2,
-//         p2.x - (p3.x - p1.x) / 6 * t * 2,
-//         p2.y - (p3.y - p1.y) / 6 * t * 2,
-//         p2.x, p2.y
-//     )
-// }
-
-// function draw(pts: Coord[], color: string, bWidth: number) {
-//     if (pts.length < 2) return
-
-//     tsCtx.save()
-//     tsCtx.strokeStyle = color
-//     tsCtx.lineWidth = toCanvasSize(bWidth)
-//     tsCtx.lineCap = "round"
-//     tsCtx.lineJoin = "round"
-    
-//     tsCtx.beginPath()
-//     tsCtx.moveTo(pts[0].x, pts[0].y) // TODO
-
-//     if (pts.length === 2) {
-//         tsCtx.lineTo(pts[1].x, pts[1].y) // TODO
-//     } else {
-//         for (let i = 1; i < pts.length - 1; i++) {
-//             catmullSeg(
-//                 tsCtx,
-//                 pts[Math.max(0, i - 1)], // TODO
-//                 pts[i],
-//                 pts[i + 1],
-//                 pts[Math.min(pts.length - 1, i + 2)]
-//             )
-//         }
-
-//         tsCtx.lineTo(
-//             pts[pts.length - 1].x, // TODO
-//             pts[pts.length - 1].y // TODO
-//         )
-//     }
-
-//     tsCtx.stroke()
-//     tsCtx.restore()
-// }
-
-// function drawDot(p: Coord, bWidth: number, color: string) {
-//     tsCtx.save()
-//     tsCtx.fillStyle = color
-//     tsCtx.beginPath()
-//     tsCtx.arc(p.x, p.y, toCanvasSize(bWidth) / 2, 0, Math.PI * 2) // TODO: check if it would be better to devide by 2
-//     tsCtx.fill()
-//     tsCtx.restore()
-// }
-
-// function eraseAt(cx: number, cy: number) {
-//     const r = tsEraserScreenPx / scale
-//     let changed = false
-
-//     strokes = strokes.filter(s => {
-//         const hw = toCanvasSize(s.baseWidth) / 2
-
-//         const hit = s.points.some(p => { 
-//             return Math.hypot(p.x - cx, p.y - cy) < r + hw
-//         })
-
-//         if (hit) changed = true
-//         return !hit
-//     })
-
-//     if (changed) redrawAll()
-// }
-
-// function redrawAll() {
-//     tsCtx.clearRect(0, 0, tsCanvasWidth, tsCanvasHeight)
-
-//     for (const s of strokes) {
-//         draw(s.points, s.color, s.baseWidth)
-//     } 
-
-//     if (currentStroke && currentStroke.points.length >= 2) {
-//         draw(currentStroke.points, currentStroke.color, currentStroke.baseWidth)
-//     }
-// }
-
 function createStrokePath(color: string): SVGPathElement {
     const element = document.createElementNS('http://www.w3.org/2000/svg', "path")
 
@@ -207,9 +112,9 @@ function createStrokePath(color: string): SVGPathElement {
 function updateStrokePath(element: SVGPathElement, pts: Coord[], baseWidth: number) {
     if (pts.length < 2) return
 
-    let d = `M ${pts[0].x} ${pts[0].y}`
+    let d = `M ${pts[0]?.x} ${pts[0]?.y}`
     for (let i = 1; i < pts.length; i++) {
-        d += ` L ${pts[i].x} ${pts[i].y}`
+        d += ` L ${pts[i]?.x} ${pts[i]?.y}`
     }
 
     element.setAttribute("d", d)
@@ -258,7 +163,7 @@ function buildOutline(pts: Coord[], baseWidth: number): CoordPoint[] {
 
     return pts.map((p, i) => {
         const t = lengths[i]! / total
-        const hw = width(t, baseWidth)
+        const hw = width(baseWidth)
 
         const prev = pts[Math.max(0, i - 1)]
         const next = pts[Math.min(n - 1, i + 1)]

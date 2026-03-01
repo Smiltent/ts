@@ -7,6 +7,9 @@
 :root {
     --bg: #000000;
     --surface: #ffffff;
+
+    --canvas-size-width: 10000px;
+    --canvas-size-height: 10000px;
 }
 
 body {
@@ -47,8 +50,8 @@ body {
 
     inset: 0;
 
-    width: 1000px;
-    height: 1000px;
+    width: var(--canvas-size-width);
+    height: var(--canvas-size-height);
     background-color: var(--surface);
 }
 
@@ -57,8 +60,8 @@ body {
 
     inset: 0;
 
-    width: 1000px;
-    height: 1000px;
+    width: var(--canvas-size-width);
+    height: var(--canvas-size-height);
     touch-action: none;
 }
 
