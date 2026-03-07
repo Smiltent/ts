@@ -1,12 +1,7 @@
 
+import type { Coord, OpAdd, OpErase, Operation } from "../../src/types/types"
+
 // types
-type Tool = "draw" | "erase"
-
-interface Coord {
-    x: number
-    y: number
-}
-
 interface CoordPoint {
     lx: number
     ly: number
@@ -16,11 +11,14 @@ interface CoordPoint {
 }
 
 interface Stroke {
+    id: string
     color: string
     baseWidth: number
     points: Coord[]
     element: SVGPathElement
 }
+
+type Tool = "draw" | "erase"
 
 // elements
 const tsCanvas = document.getElementById("tsCanvas") as unknown as SVGSVGElement
@@ -33,6 +31,8 @@ const tsCanvasHeight: number = 10000
 const tsScaleMin: number = 0.08
 const tsScaleMax: number = 8
 const tsEraserScreenPx: number = 18
+
+const tsOperations: Operation[] = []
 
 let panX: number = 0
 let panY: number = 0
@@ -96,7 +96,7 @@ function zoom(factor: number, x: number, y: number) {
     applyTransform()
 }
 
-function createStrokePath(color: string): SVGPathElement {
+function createStrokePath(color: string, id: string): SVGPathElement {
     const element = document.createElementNS('http://www.w3.org/2000/svg', "path")
 
     element.setAttribute("fill", "none")
@@ -104,6 +104,7 @@ function createStrokePath(color: string): SVGPathElement {
     element.setAttribute("stroke-linecap", "round")
     element.setAttribute("stroke-linejoin", "round")
     element.setAttribute("stroke-width", String(strokeWidth))
+    element.dataset.id = id
 
     tsCanvas.appendChild(element)
     return element
@@ -221,6 +222,8 @@ function outlineToPath(pts: Coord[], baseWidth: number) {
 function eraseAt(x: number, y: number) {
     const r = tsEraserScreenPx / scale
     const nextStrokes: Stroke[] = []
+    const erasedIds: string[] = []
+    const replacements: OpErase["replacements"] = []
 
     for (const s of strokes) {
         const seg = splitStrokeByCircle(s.points, x, y, r)
@@ -231,20 +234,34 @@ function eraseAt(x: number, y: number) {
         }
 
         s.element.remove()
+        erasedIds.push(s.id)
 
         for (const sg of seg) {
             if (sg.length < 2) continue
 
-            const element = createStrokePath(s.color)
+            const id = crypto.randomUUID()
+            const element = createStrokePath(s.color, id)
             updateStrokePath(element, sg, s.baseWidth)
 
+            replacements.push({
+                id,
+                color: s.color,
+                baseWidth: s.baseWidth,
+                points: sg,
+            })
+
             nextStrokes.push({
+                id,
                 color: s.color,
                 baseWidth: s.baseWidth,
                 points: sg,
                 element
             })
         }
+    }
+
+    if (erasedIds.length > 0) {
+        tsOperations.push({ op: "erase", ids: erasedIds, replacements })
     }
 
     strokes = nextStrokes
@@ -266,9 +283,8 @@ tsViewport?.addEventListener('pointerdown', (e: PointerEvent) => {
 
     if (tool === "draw") {
         const p = screenToCanvas(e.clientX, e.clientY)
-
         points = [p]
-        currentElement = createStrokePath(strokeColor)
+        currentElement = createStrokePath(strokeColor, crypto.randomUUID())
     } else if (tool === "erase") {
         const p = screenToCanvas(e.clientX, e.clientY)
         eraseAt(p.x, p.y)
@@ -311,16 +327,14 @@ tsViewport?.addEventListener('pointerup', e => {
 
     if (tool === "draw" && currentElement) {
         if (points.length >= 2) {
-            strokes.push({
-                color: strokeColor,
-                baseWidth: strokeWidth,
-                points,
-                element: currentElement
-            })
+            const id = currentElement.dataset.id!
+            strokes.push({ id, color: strokeColor, baseWidth: strokeWidth, points, element: currentElement })
+
+            tsOperations.push({ op: "add", id, color: strokeColor, baseWidth: strokeWidth, points }) 
         } else {
             currentElement.remove()
         }
-        
+
         points = []
         currentElement = null
     }
@@ -334,16 +348,25 @@ tsViewport.addEventListener('wheel', e => {
 setTool("draw")
 init()
 
+
 // administrator saving (must be authenticated)
 document.getElementById("saveButton")?.addEventListener("click", async () => {
-    const data = tsCanvas.innerHTML
+    const payload = JSON.stringify({ ops: tsOperations })
+
+    const stream = new CompressionStream("gzip")
+    const writer = stream.writable.getWriter()
+    writer.write(new TextEncoder().encode(payload))
+    writer.close()
+
+    const compressed = await new Response(stream.readable).arrayBuffer()
 
     const res = await fetch(`/d/save`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/octet-stream",
+            "X-Content-Encoding": "gzip"
         },
-        body: JSON.stringify({ svg: data })
+        body: compressed
     })
 
     if (res.ok) {
@@ -353,3 +376,31 @@ document.getElementById("saveButton")?.addEventListener("click", async () => {
         alert("Failed to save!")
     }
 })
+
+function replayOps(ops: Operation[]) {
+    const strokeMap = new Map<string, Stroke>()
+
+    for (const op of ops) {
+        if (op.op === "add") {
+            const element = createStrokePath(op.color, op.id)
+            element.setAttribute("stroke-width", String(op.baseWidth))
+            updateStrokePath(element, op.points, op.baseWidth)
+            const stroke = { id: op.id, color: op.color, baseWidth: op.baseWidth, points: op.points, element }
+            strokeMap.set(op.id, stroke)
+        } else if (op.op === "erase") {
+            for (const id of op.ids) {
+                strokeMap.get(id)?.element.remove()
+                strokeMap.delete(id)
+            }
+            for (const r of op.replacements) {
+                const element = createStrokePath(r.color, r.id)
+                element.setAttribute("stroke-width", String(r.baseWidth))
+                updateStrokePath(element, r.points, r.baseWidth)
+                strokeMap.set(r.id, { ...r, element })
+            }
+        }
+    }
+
+    strokes = Array.from(strokeMap.values())
+}
+(window as any).replayOps = replayOps

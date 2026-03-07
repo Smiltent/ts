@@ -12,19 +12,33 @@
     <div id="tsViewport">
         <div id="tsWorld">
             <div id="tsCanvasBg"></div>
-            <svg id="tsCanvas" width="10000" height="10000">
-                <%- drawing %>
-            </svg>
+            <svg id="tsCanvas" width="10000" height="10000"></svg>
         </div>
     </div>
 
-    <div>
-        <div>
-            <div onclick="setTool('draw')"></div>
-            <div onclick="setTool('eraser')"></div>
+    <div class="relative">
+        <div class="selector">
+            <div class="selectorTools">
+                <div id="selectDrawing"></div>
+                <div id="selectEraser"></div>
+                <div id="selectColorPicker"></div>
+            </div>
+            <div class="selectorColors">
+                <div id="colorRed"></div>
+                <div id="colorOrange"></div>
+                <div id="colorCustom"></div>
+            </div>
+            <div class="selectorBrushSizes">
+                <div id="brushSmall"></div>
+                <div id="brushMedium"></div>
+                <div id="brushHuge"></div>
+            </div>
         </div>
     </div>
 
     <script src="/public/js/paint.js"></script>
+    <script>
+        replayOps(<%- JSON.stringify(drawing.ops) %>)
+    </script>
 </body>
 </html>
