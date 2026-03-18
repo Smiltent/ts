@@ -1,7 +1,7 @@
 
 import express, { Router } from "express"
 import { promisify } from "util"
-import { db } from "../.."
+import { db } from ".."
 import zlib from "zlib"
 import type { StrokeRecord } from "../types/types"
 

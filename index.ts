@@ -1,8 +1,11 @@
 import DatabaseService from "./src/db"
 import ServerService from "./src/server"
-import ListenForFileChanges from "./src/util/listenForFileChanges"
+import ListenForFileChanges from "./util/listenForFileChanges"
 
-// new ListenForFileChanges("public/ts/paint.ts")
+import dotenv from "dotenv"
+dotenv.config()
+
+new ListenForFileChanges("public/ts/paint.ts")
 
 export const db = new DatabaseService("drawings.db")
 new ServerService()

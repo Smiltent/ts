@@ -36,4 +36,3 @@ export interface DrawingRecord {
     ops: Operation[]
     strokes: StrokeRecord[]
 }
-

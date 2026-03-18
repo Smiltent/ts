@@ -1,5 +1,7 @@
 
-import rootRoutes from "./routes/root.routes"
+import rootRoutes from "../routes/root.routes"
+import authRoutes from "../routes/auth.routes"
+
 import compression from "compression"
 import express from "express"
 
@@ -18,6 +20,7 @@ export default class ServerService {
         this.app.use(compression())
         this.app.use(express.urlencoded({ extended: true }))
 
+        this.app.use("/auth", authRoutes)
         this.app.use("/", rootRoutes)
 
         this.app.listen(3000, () => {

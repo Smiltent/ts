@@ -1,5 +1,5 @@
 
-import type { Coord, OpAdd, OpErase, Operation } from "../../src/types/types"
+import type { Coord, OpAdd, OpErase, Operation } from "../../types/types"
 
 // types
 interface CoordPoint {

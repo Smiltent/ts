@@ -1,5 +1,5 @@
 
-import type { DrawingRecord } from "./types/types"
+import type { DrawingRecord } from "../types/types"
 import Database from "bun:sqlite"
 
 export default class DatabaseService {
