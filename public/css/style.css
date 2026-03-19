@@ -14,8 +14,83 @@
 
 body {
     background-color: var(--bg);
+    font-family: sans-serif; /*! Temporary, change later */
 }
 
+/* 
+    Login | Save button 
+*/
+#tsSaveButton {
+    position: fixed;
+    top: 12px;
+    left: 14px;
+    z-index: 99;
+    padding: 3px 15px;
+
+    cursor: pointer;
+    
+    border: 1px black solid;
+    border-radius: 4px;
+    background-color: white;
+}
+#tsSaveButton:hover {
+    background-color: #dbdbdb;
+}
+
+#tsAuth {
+    position: fixed;
+    top: 12px;
+    right: 14px;
+    z-index: 99;
+    display: flex;
+    align-items: center;
+}
+
+#tsAuth *:not(:last-child) {
+    padding-right: 5px;
+}
+
+/* 
+    Bottom bar (select bar or toolbar whatever its called)
+*/
+#tsToolbar {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99;
+
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.tsToolGroup {
+    display: flex;
+    align-items: center;
+    gap: 3;
+}
+
+.tsToolDivider {
+    width: 1px;
+    height: 32px;
+    margin: 0 6px;
+    flex-shrink: 0;
+}
+
+.tsToolBtn {
+    display: flex;
+    gap: 3px;
+    width: 45px;
+    height: 45px;
+    border: 1px solid black;
+    border-radius: 8px;
+    background-color: white;
+}
+
+/* 
+    Drawing pad thing
+*/
 #tsViewport {
     width: 100vw;
     height: 100vh;
