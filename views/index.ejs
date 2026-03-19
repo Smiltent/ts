@@ -8,7 +8,19 @@
     <link rel="stylesheet" href="/public/css/style.css">
 </head>
 <body>
-    <button id="saveButton">save</button>
+    <% if (user) { %>
+        <div id="tsAuth">
+            <span class="tsAuthEmail"><%= user.email %></span>
+            <a href="/auth/logout">
+                Logout
+            </a>
+        </div>
+    <% } %>
+
+    <% if (isAdmin) { %>
+        <button id="tsSaveButton">save</button>
+    <% } %>
+
     <div id="tsViewport">
         <div id="tsWorld">
             <div id="tsCanvasBg"></div>
@@ -16,23 +28,41 @@
         </div>
     </div>
 
-    <div class="relative">
-        <div class="selector">
-            <div class="selectorTools">
-                <div id="selectDrawing"></div>
-                <div id="selectEraser"></div>
-                <div id="selectColorPicker"></div>
-            </div>
-            <div class="selectorColors">
-                <div id="colorRed"></div>
-                <div id="colorOrange"></div>
-                <div id="colorCustom"></div>
-            </div>
-            <div class="selectorBrushSizes">
-                <div id="brushSmall"></div>
-                <div id="brushMedium"></div>
-                <div id="brushHuge"></div>
-            </div>
+    <div id="tsToolbar">
+        <div class="tsToolGroup">
+            <button id="tsBtnMove" class="tsToolBtn" title="Move">
+                <span>Move</span>
+            </button>
+            <button id="tsBtnDraw" class="tsToolBtn" title="Draw">
+                <span>Draw</span>
+            </button>
+            <button id="tsBtnSpray" class="tsToolBtn" title="Spray">
+                <span>Spray</span>
+            </button>
+            <button id="tsBtnErase" class="tsToolBtn" title="Erase">
+                <span>Erase</span>
+            </button>
+        </div>
+
+        <div class="tsToolDevider"></div>
+
+        <div class="tsToolGroup tsBrushGroup">
+            <input type="range" id="tsBrushSizeSlider" min="1" max="40" value="3" class="tsBrushSlider">
+            <span id="tsBrushSizeLabel" class="tsBrushLabel">3</span>
+        </div>
+
+        <div class="tsToolDevider"></div>
+
+        <div class="tsToolGroup colorGroup">
+            <button id="tsBtnColorBlack" class="tsColorBtn" title="Black">
+                <span class="tsColorSwitch" style="background-color: #000000;"></span>
+            </button>
+            <button id="tsBtnColorBlue" class="tsColorBtn" title="Black">
+                <span class="tsColorSwitch" style="background-color: #000000;"></span>
+            </button>
+            <button id="tsBtnColorPicker" class="tsColorBtn tsColorPickerBtn" title="Custom">
+                <input type="tsColor" id="tsColorPickerInput" value="#000000" tabindex="-1" aria-hidden="true">
+            </button>
         </div>
     </div>
 

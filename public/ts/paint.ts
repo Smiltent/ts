@@ -403,4 +403,6 @@ function replayOps(ops: Operation[]) {
 
     strokes = Array.from(strokeMap.values())
 }
+
+
 (window as any).replayOps = replayOps

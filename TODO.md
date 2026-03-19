@@ -6,4 +6,4 @@
 * [ ] Proper saving to a database (Either Mongo or Postgres)
 * [ ] HC Auth for saving changes (we are not giving everyone access to saving...)
 * [ ] Cleanup / comment
-* [ ] Docker?
+* [x] Docker?

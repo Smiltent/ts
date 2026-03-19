@@ -64,34 +64,3 @@ body {
     height: var(--canvas-size-height);
     touch-action: none;
 }
-
-/* tss {
-    position: absolute;
-    z-index: 10;
-
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    padding-bottom: 1rem;
-}
-
-tss tsss {
-    display: flex;
-    flex-direction: row;
-}
-
-tss tsss tssss {
-    cursor: pointer;
-
-    padding: 2rem;
-    border-radius: 1rem;
-    background-color: #000000;
-}
-
-tss tsss tssss:not(:first-child) {
-    margin-left: 1rem;
-}
-
-tss tsss tssss:hover {
-    background-color: rgb(7, 7, 7);
-} */
