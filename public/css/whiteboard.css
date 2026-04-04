@@ -1,0 +1,43 @@
+
+#tsViewport {
+    width: 100vw;
+    height: 100vh;
+
+    overflow: hidden;
+    position: relative;
+    cursor: default;
+
+    touch-action: none;
+}
+
+#tsViewport.brush, #tsViewport.pencil, #tsViewport.spray { cursor: crosshair; }
+#tsViewport.grabbing { cursor: grabbing !important; }
+#tsViewport.erase { cursor: cell; }
+
+#tsWorld {
+    position: absolute;
+ 
+    background-color: var(--surface);
+    border-radius: 4px;
+    transform-origin: 0 0;
+}
+
+#tsCanvasBg {
+    position: absolute;
+
+    width: var(--canvas-size-width);
+    height: var(--canvas-size-height);
+    background-color: var(--surface);
+
+    inset: 0;
+}
+
+#tsCanvas {
+    position: absolute;
+
+    width: var(--canvas-size-width);
+    height: var(--canvas-size-height);
+    
+    touch-action: none;
+    inset: 0;
+}

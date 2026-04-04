@@ -6,6 +6,7 @@ export interface Coord {
 
 export interface OpAdd {
     op: "add"
+    type: "pencil" | "marker"
     id: string
     color: string
     baseWidth: number

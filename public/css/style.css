@@ -17,9 +17,6 @@ body {
     font-family: sans-serif; /*! Temporary, change later */
 }
 
-/* 
-    Login | Save button 
-*/
 #tsSaveButton {
     position: fixed;
     top: 12px;
@@ -33,9 +30,7 @@ body {
     border-radius: 4px;
     background-color: white;
 }
-#tsSaveButton:hover {
-    background-color: #dbdbdb;
-}
+#tsSaveButton:hover { background-color: #e8e8e8; }
 
 #tsAuth {
     position: fixed;
@@ -48,94 +43,4 @@ body {
 
 #tsAuth *:not(:last-child) {
     padding-right: 5px;
-}
-
-/* 
-    Bottom bar (select bar or toolbar whatever its called)
-*/
-#tsToolbar {
-    position: fixed;
-    bottom: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 99;
-
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.tsToolGroup {
-    display: flex;
-    align-items: center;
-    gap: 3;
-}
-
-.tsToolDivider {
-    width: 1px;
-    height: 32px;
-    margin: 0 6px;
-    flex-shrink: 0;
-}
-
-.tsToolBtn {
-    display: flex;
-    gap: 3px;
-    width: 45px;
-    height: 45px;
-    border: 1px solid black;
-    border-radius: 8px;
-    background-color: white;
-}
-
-/* 
-    Drawing pad thing
-*/
-#tsViewport {
-    width: 100vw;
-    height: 100vh;
-
-    overflow: hidden;
-    position: relative;
-    cursor: default;
-}
-
-#tsViewport.drawing {
-    cursor: crosshair;
-}
-
-#tsViewport.grabbing {
-    cursor: grabbing;
-}
-
-#tsViewport.grabbing {
-    cursor: cell;
-}
-
-#tsWorld {
-    position: absolute;
-    
-    background-color: var(--surface);
-    border-radius: 4px;
-    transform-origin: 0 0;
-}
-
-#tsCanvasBg {
-    position: absolute;
-
-    inset: 0;
-
-    width: var(--canvas-size-width);
-    height: var(--canvas-size-height);
-    background-color: var(--surface);
-}
-
-#tsCanvas {
-    position: absolute;
-
-    inset: 0;
-
-    width: var(--canvas-size-width);
-    height: var(--canvas-size-height);
-    touch-action: none;
 }

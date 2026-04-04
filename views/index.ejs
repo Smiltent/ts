@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ts.hackclub.com</title>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <link rel="stylesheet" href="/public/css/style.css">
+    <link rel="stylesheet" href="/public/css/whiteboard.css">
+    <link rel="stylesheet" href="/public/css/toolbar.css">
 </head>
 <body>
     <% if (user) { %>
@@ -13,7 +17,7 @@
             <span class="tsAuthEmail"><%= user.email %></span>
             <span>|</span>
             <a href="/auth/logout">
-                Logout
+                logout
             </a>
         </div>
     <% } %>
@@ -32,44 +36,39 @@
     <div id="tsToolbar">
         <div class="tsToolGroup">
             <button id="tsBtnMove" class="tsToolBtn" title="Move">
-                <span>Move</span>
+                <i class="fa-solid fa-up-down-left-right fa-xl"></i>
             </button>
-            <button id="tsBtnDraw" class="tsToolBtn" title="Draw">
-                <span>Draw</span>
+            <button id="tsBtnMarker" class="tsToolBtn" title="Draw">
+                <i class="fa-solid fa-marker fa-xl"></i>
             </button>
-            <button id="tsBtnSpray" class="tsToolBtn" title="Spray">
-                <span>Spray</span>
+            <button id="tsBtnPencil" class="tsToolBtn" title="Draw">
+                <i class="fa-solid fa-pencil fa-xl"></i>
             </button>
             <button id="tsBtnErase" class="tsToolBtn" title="Erase">
-                <span>Erase</span>
+                <i class="fa-solid fa-eraser fa-xl"></i>
             </button>
         </div>
-
-        <div class="tsToolDevider"></div>
 
         <div class="tsToolGroup tsBrushGroup">
             <input type="range" id="tsBrushSizeSlider" min="1" max="40" value="3" class="tsBrushSlider">
             <span id="tsBrushSizeLabel" class="tsBrushLabel">3</span>
         </div>
 
-        <div class="tsToolDevider"></div>
-
-        <div class="tsToolGroup colorGroup">
+        <div class="tsToolGroup tsColorGroup">
             <button id="tsBtnColorBlack" class="tsColorBtn" title="Black">
                 <span class="tsColorSwitch" style="background-color: #000000;"></span>
             </button>
             <button id="tsBtnColorBlue" class="tsColorBtn" title="Black">
-                <span class="tsColorSwitch" style="background-color: #000000;"></span>
+                <span class="tsColorSwitch" style="background-color: #0f39c5;"></span>
             </button>
             <button id="tsBtnColorPicker" class="tsColorBtn tsColorPickerBtn" title="Custom">
-                <input type="tsColor" id="tsColorPickerInput" value="#000000" tabindex="-1" aria-hidden="true">
+                <i class="fa-solid fa-droplet "></i>
+                <input type="color" id="tsColorPickerInput" value="#000000" tabindex="-1" aria-hidden="true">
             </button>
         </div>
     </div>
 
     <script src="/public/js/paint.js"></script>
-    <script>
-        replayOps(<%- JSON.stringify(drawing.ops) %>)
-    </script>
+    <script>replayOps(<%- JSON.stringify(drawing.ops) %>)</script>
 </body>
 </html>

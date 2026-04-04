@@ -1,6 +1,6 @@
 
 services:
-  firewall:
+  ts:
     build: .
     restart: unless-stopped
     env_file:

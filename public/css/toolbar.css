@@ -1,0 +1,97 @@
+
+#tsToolbar {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99;
+
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.tsToolGroup {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.tsBrushGroup {
+    display: flex;
+
+    justify-content: center;
+    padding: 0 0 0 10px;
+}
+
+.tsToolBtn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    width: 45px;
+    height: 45px;
+    border: 1px solid black;
+    border-radius: 12px;
+    background-color: rgb(190, 190, 190);
+}
+
+.tsToolBtn:hover {
+    background-color: rgba(255, 255, 255, 0.1);;
+}
+
+.tsToolBtn.active {
+    background-color: rgba(255, 255, 255, 0.18);
+}
+
+.tsBrushSlider {
+    appearance: none;
+    width: 80px;
+    height: 8px;
+    background-color: #000;
+    border-radius: 5px;
+
+    cursor: pointer;
+}
+
+.tsColorBtn {
+    width: 34px;
+    height: 34px;
+    border-radius: 100%;
+    border: 1px solid transparent;
+    background: transparent;
+
+    cursor: pointer;
+
+    position: relative;
+}
+
+.tsColorPickerBtn {
+    overflow: hidden;
+
+    border: 1px solid black;
+}
+
+.tsColorSwitch {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: block;
+    pointer-events: none;
+}
+
+#tsBrushSizeLabel {
+    width: 20px;
+}
+
+#tsColorPickerInput {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
