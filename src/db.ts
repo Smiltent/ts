@@ -1,51 +1,34 @@
 
 import type { DrawingRecord } from "../types/types"
-import mysql from "mysql2/promise"
+import Database from "bun:sqlite"
 
 export default class DatabaseService {
-    private database!: mysql.Connection
+    private database: Database
     private drawing: DrawingRecord = { ops: [], strokes: [] }
 
-    constructor(config: mysql.ConnectionOptions) {
-        this.init(config)
-    }
-
-    public async init(config: mysql.ConnectionOptions) {
-        this.database = await mysql.createConnection(config)
-
-        await this.database.execute(`
+    constructor(private dbFile: string) {
+        this.database = new Database(this.dbFile)
+        this.database.run(`
             CREATE TABLE IF NOT EXISTS drawings (
-                id INT PRIMARY KEY AUTO_INCREMENT,
-                data JSON NOT NULL
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                data TEXT NOT NULL
             )
         `)
 
-        const [ rows ] = await this.database.execute<mysql.RowDataPacket[]>(
-            "SELECT data FROM drawings WHERE id = 1"
-        )
-
-        this.drawing = rows.length > 0 ? rows[0]?.data : { ops: [], strokes: [] } 
+        const row = this.database.query("SELECT data FROM drawings WHERE id = 1").get() as { data: string } | null
+        this.drawing = row ? JSON.parse(row.data) : { ops: [], strokes: [] }
     }
 
     public getDrawing(): DrawingRecord { return this.drawing }
-
-    public async saveDrawing(drawing: DrawingRecord): Promise<Boolean> {
+    public saveDrawing(drawing: DrawingRecord): Boolean {
         const merged: DrawingRecord = {
             ops: [...this.drawing.ops, ...drawing.ops],
             strokes: drawing.strokes 
         }
 
         this.drawing = merged
-
-        const [ result ] = await this.database.execute<mysql.ResultSetHeader>(
-            "INSERT INTO drawings(id, data) VALUES (1, ?) ON DUPLICATE KEY UPDATE data = VALUES(data)",
-            [JSON.stringify(merged)]
-        )
-
-        return result.affectedRows > 0
-    }
-
-    public async close() {
-       await this.database.end() 
+        const stmt = this.database.prepare("INSERT OR REPLACE INTO drawings (id, data) VALUES (1, ?)")
+        const result = stmt.run(JSON.stringify(merged))
+        return result.changes > 0
     }
 }

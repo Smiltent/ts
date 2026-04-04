@@ -1,18 +1,9 @@
 
 services:
-  db:
-    image: mysql:8.0
-    environment:
-      - MYSQL_DATABASE=${DB_DATABASE}
-      - MYSQL_USER=${DB_USER}
-      - MYSQL_PASSWORD=${DB_PASSWORD}
-    env_file:
-      - .env
-    # ports:
-    #   - '3306:3306'
-
   ts:
     build: .
     restart: unless-stopped
+    volumes:
+      - ./drawings.db:/app/drawings.db
     env_file:
       - .env
