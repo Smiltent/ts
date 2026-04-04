@@ -5,7 +5,7 @@
 }
 
 :root {
-    --bg: #c0c0c0;
+    --bg: #d2d2d2;
     --surface: #ffffff;
 
     --canvas-size-width: 10000px;
@@ -14,7 +14,7 @@
 
 body {
     background-color: var(--bg);
-    font-family: sans-serif; /*! Temporary, change later */
+    font-family: sans-serif; /*! Temporary, change later (hell nah earlier me) */
 }
 
 #tsSaveButton {
