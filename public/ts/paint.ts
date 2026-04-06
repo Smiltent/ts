@@ -85,6 +85,8 @@ function init() {
     const vw = window.innerWidth
     const vh = window.innerHeight
 
+    scale = Math.min(vw / tsCanvasWidth, vh / tsCanvasHeight) * 5
+
     if (isOnMobile()) {
         const toolbar = document.getElementById("tsToolbar")
         if (toolbar) {
@@ -93,13 +95,10 @@ function init() {
 
         setTool("move")
 
-        scale = Math.min(vw / tsCanvasWidth, vh / tsCanvasHeight) * 2
         tsScaleMax *= 5
     } else {
         setColor("#000000")
         setTool("pencil")
-
-        scale = Math.min(vw / tsCanvasWidth, vh / tsCanvasHeight) * 5
     }
 
     panX = (vw - tsCanvasWidth * scale) / 2
