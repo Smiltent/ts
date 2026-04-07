@@ -61,6 +61,7 @@ let currentElement: SVGPathElement | null = null
 let isPanning: boolean = false
 let panStart: Coord | null = null
 
+let tsIsPinching: boolean = false
 let tsLastTouchDistance: number | null = null
 
 // util
@@ -80,7 +81,7 @@ function isOnMobile() {
 
 // center it based off the users viewport
 function init() {
-    tsBrushSizeLabel.innerText = String(document.getElementById("tsBrushSizeSlider")?.value)
+    tsBrushSizeLabel.innerText = String(tsBrushSizeSlider?.value)
 
     const vw = window.innerWidth
     const vh = window.innerHeight
@@ -305,6 +306,8 @@ tsViewport?.addEventListener('pointerdown', (e: PointerEvent) => {
 })
 
 tsViewport?.addEventListener('pointermove', e => {
+    if (tsIsPinching) return
+
     if (isPanning && panStart) {
         panX = e.clientX - panStart.x
         panY = e.clientY - panStart.y
@@ -317,6 +320,7 @@ tsViewport?.addEventListener('pointermove', e => {
     if (tool === "pencil" && currentElement) {
         const p = screenToCanvas(e.clientX, e.clientY)
         const prev = points[points.length - 1]
+
         if (prev && Math.hypot(p.x - prev.x, p.y - prev.y) > 1 / scale) {
             points.push(p)
             updateStrokePath(currentElement, points, strokeWidth)
@@ -324,12 +328,14 @@ tsViewport?.addEventListener('pointermove', e => {
     } else if (tool === "marker" && currentElement) {
         const p = screenToCanvas(e.clientX, e.clientY)
         const prev = points[points.length - 1]
+
         if (prev && Math.hypot(p.x - prev.x, p.y - prev.y) > 1 / scale) {
             points.push(p)
             updateMarkerPath(currentElement, points)
         }
     } else if (tool === "erase") {
         const p = screenToCanvas(e.clientX, e.clientY)
+
         eraseAt(p.x, p.y)
     }
 })
@@ -377,15 +383,31 @@ tsViewport.addEventListener('wheel', e => {
     zoom(e.deltaY < 0 ? 1.1 : 0.91, e.clientX, e.clientY)
 }, { passive: false })
 
+// keybinds
+document.addEventListener("keydown", e => {
+    if (e.key === "1") setTool("move")
+    if (e.key === "2") setTool("marker")
+    if (e.key === "3") setTool("pencil")
+    if (e.key === "4") setTool("erase")
+})
+
 tsBtnMove?.addEventListener("click", () => setTool("move"))
 tsBtnPencil?.addEventListener("click", () => setTool("pencil"))
 tsBtnMarker?.addEventListener("click", () => setTool("marker"))
 tsBtnErase?.addEventListener("click", () => setTool("erase"))
 
 tsBrushSizeSlider?.addEventListener("input", () => {
-    strokeWidth = parseInt(tsBrushSizeSlider.value)
+    const inputSize = parseInt(tsBrushSizeSlider.value)
 
-    if (tsBrushSizeLabel) {
+    // try to get by this one n0o0b090lv!
+    if (inputSize > 40) { 
+        strokeWidth = 40
+        tsBrushSizeLabel.textContent = ">:)"
+    } else if (inputSize < -40) {
+        strokeWidth = -40
+        tsBrushSizeLabel.textContent = ">:("
+    } else {
+        strokeWidth = inputSize
         tsBrushSizeLabel.textContent = String(strokeWidth)
     }
 })
@@ -399,16 +421,27 @@ tsColorPickerInput?.addEventListener("input", () => {
     tsBtnColorPicker.style.background = tsColorPickerInput.value
 })
 
+// mobile
 tsViewport.addEventListener("touchstart", e => {
     if (e.touches.length === 2) {
+        tsIsPinching = true
+
         tsLastTouchDistance = Math.hypot(
             e.touches[1]!.clientX - e.touches[0]!.clientX,
             e.touches[1]!.clientY - e.touches[0]!.clientY,
         )
     }
+
+    if (currentElement) {
+        currentElement.remove()
+        currentElement = null
+        points = []
+    }
 }, { passive: true })
 
 tsViewport.addEventListener("touchmove", e => {
+    e.preventDefault()
+
     if (e.touches.length === 2) {
         const dist = Math.hypot(
             e.touches[1]!.clientX - e.touches[0]!.clientX,
@@ -424,12 +457,16 @@ tsViewport.addEventListener("touchmove", e => {
 
         tsLastTouchDistance = dist
     }
-}, { passive: true })
+}, { passive: false })
 
 tsViewport.addEventListener("touchend", e => {
-    tsLastTouchDistance = null
+    if (e.touches.length < 2) {
+        tsIsPinching = false
+        tsLastTouchDistance = null
+    }
 }, { passive: true })
 
+// save
 document.getElementById("tsSaveButton")?.addEventListener("click", async () => {
     const payload = JSON.stringify({ ops: tsOperations })
     const stream = new CompressionStream("gzip")

@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="/public/css/style.css">
     <link rel="stylesheet" href="/public/css/whiteboard.css">
     <link rel="stylesheet" href="/public/css/toolbar.css">
+
+    <link rel="shortcut icon" href="/public/favicon.ico" type="image/x-icon">
 </head>
 <body>
     <% if (user) { %>
@@ -50,7 +52,8 @@
         </div>
 
         <div class="tsToolGroup tsBrushGroup">
-            <input type="range" id="tsBrushSizeSlider" min="1" max="40" value="3" class="tsBrushSlider">
+            <!-- the fact that -40 works very well in this situation, insane! -->
+            <input type="range" id="tsBrushSizeSlider" min="-40" max="40" value="3" class="tsBrushSlider"> 
             <span id="tsBrushSizeLabel" class="tsBrushLabel">3</span>
         </div>
 
