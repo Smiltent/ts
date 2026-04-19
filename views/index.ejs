@@ -24,11 +24,26 @@
         </div>
     <% } %>
 
-    <% if (isAdmin) { %>
-        <button id="tsSaveButton">save</button>
-    <% } %>
+    <div class="tsButtons">
+        <button class="tsButton" id="tsButtonSlack">slack channel (#ts)</button>
+        <% if (isAdmin) { %>
+            <button class="tsButton" id="tsSaveButton">save</button>
+        <% } %>
+    </div>
 
     <div id="tsViewport">
+        <div id="tsPopup">
+            <h1>welcome to ts!!!!</h1>
+            <div class="tsText">
+                <p>you ship: typescript project<br>we ship: goodies & drawing of you</p><br>
+                <p>btw: the drawings we make get saved on this page</p>
+            </div>
+            <div class="tsButtonsPopup">
+                <button class="tsButton" id="tsPopupClose">close</button>
+                <button class="tsButton" id="tsButtonSlack">slack channel (#ts)</button>
+            </div>
+        </div>
+        
         <div id="tsWorld">
             <div id="tsCanvasBg"></div>
             <svg id="tsCanvas" width="10000" height="10000"></svg>

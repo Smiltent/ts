@@ -38,6 +38,11 @@ const tsBtnColorBlack = document.getElementById("tsBtnColorBlack") as HTMLButton
 const tsBtnColorPicker = document.getElementById("tsBtnColorPicker") as HTMLButtonElement
 const tsColorPickerInput = document.getElementById("tsColorPickerInput") as HTMLInputElement
 
+// popup & extra buttons
+const tsPopup = document.getElementById("tsPopup") as HTMLElement
+const tsPopupClose = document.getElementById("tsPopupClose") as HTMLButtonElement
+const tsButtonSlack = document.getElementById("tsButtonSlack") as HTMLButtonElement
+
 // state
 const tsCanvasWidth: number = 10000
 const tsCanvasHeight: number = 10000
@@ -280,6 +285,8 @@ function eraseAt(x: number, y: number) {
 tsViewport?.addEventListener('contextmenu', e => e.preventDefault())
 
 tsViewport?.addEventListener('pointerdown', (e: PointerEvent) => {
+    if (e.target instanceof Element && e.target.closest('button, input, #tsPopup, #tsToolbar, .tsButtons')) return
+
     tsViewport.setPointerCapture(e.pointerId)
 
     if (tool === "move" || e.button === 2) {
@@ -383,6 +390,16 @@ tsViewport.addEventListener('wheel', e => {
     zoom(e.deltaY < 0 ? 1.1 : 0.91, e.clientX, e.clientY)
 }, { passive: false })
 
+tsButtonSlack.addEventListener('click', e => {
+    window.open("https://hackclub.enterprise.slack.com/archives/C09B42CLL72", "_blank")
+})
+
+tsPopupClose.addEventListener('click', e => {
+    localStorage.setItem("nonononodontshowmethatpopupeveragainoriwillcallmylawyersandsaythatyouareameanie", "true")
+
+    tsPopup.style.display = "none"
+})
+
 // keybinds
 document.addEventListener("keydown", e => {
     if (e.key === "1") setTool("move")
@@ -422,7 +439,7 @@ tsColorPickerInput?.addEventListener("input", () => {
 })
 
 // mobile
-tsViewport.addEventListener("touchstart", e => {
+tsViewport.addEventListener("touchstart", e => { 
     if (e.touches.length === 2) {
         tsIsPinching = true
 

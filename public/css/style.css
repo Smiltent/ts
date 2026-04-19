@@ -14,14 +14,30 @@
 
 body {
     background-color: var(--bg);
-    font-family: sans-serif; /*! Temporary, change later (hell nah earlier me) */
+    font-family: sans-serif; 
 }
 
-#tsSaveButton {
+.tsButtons {
     position: fixed;
     top: 12px;
     left: 14px;
     z-index: 99;
+}
+
+.tsButtonsPopup {
+    padding-top: 1rem;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.tsButtonsPopup .tsButton:not(:last-child) {
+    margin-right: 5px;
+}
+
+.tsButton {
     padding: 3px 15px;
 
     cursor: pointer;
@@ -30,7 +46,7 @@ body {
     border-radius: 4px;
     background-color: white;
 }
-#tsSaveButton:hover { background-color: #e8e8e8; }
+.tsButton:hover { background-color: #e8e8e8; }
 
 #tsAuth {
     position: fixed;
@@ -43,4 +59,11 @@ body {
 
 #tsAuth *:not(:last-child) {
     padding-right: 5px;
+}
+
+#tsFirstPopup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
 }

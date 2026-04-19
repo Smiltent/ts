@@ -1,4 +1,40 @@
 
+#tsPopup {
+    pointer-events: all;
+
+    transition: opacity 0.4s ease;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 1rem;
+    padding: 2.5rem;
+
+    width: 300px;
+    max-width: 300px;
+}
+
+#tsPopup .tsButtonsPopup .tsButtons {
+    pointer-events: all;
+}
+
+#tsPopup .tsText, #tsPopup h1 {
+    user-select: none;
+
+    text-align: center;
+}
+
+#tsPopup .tsText p {
+    user-select: none;
+
+    overflow-wrap: break-word;
+}
+
 #tsViewport {
     width: 100vw;
     height: 100vh;
