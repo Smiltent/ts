@@ -86,6 +86,10 @@ function isOnMobile() {
 
 // center it based off the users viewport
 function init() {
+    if (localStorage.getItem("nonononodontshowmethatpopupeveragainoriwillcallmylawyersandsaythatyouareameanie") === "true") {
+        tsPopup.style.display = "none"
+    }
+
     tsBrushSizeLabel.innerText = String(tsBrushSizeSlider?.value)
 
     const vw = window.innerWidth
