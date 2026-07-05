@@ -1,9 +1,0 @@
-
-services:
-  ts:
-    build: .
-    restart: unless-stopped
-    volumes:
-      - ./drawings.db:/app/drawings.db
-    env_file:
-      - .env
