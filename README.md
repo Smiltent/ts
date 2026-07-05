@@ -1,12 +1,11 @@
 
 <h1 align="center">#ts</h1>
-<p align="center"><em>#ts v2 ysws</em></p>
+<p align="center"><em>Built for the #ts v2 YSWS (which never released).</em></p>
 <img src="_header.png">
 
 # About
 #ts is a single shared, persistant whiteboard. Anyone can view the canvas; drawing is only allowed for admins who sign in via HC Auth.
 Drawings get saved as vector operations in SQLite, so the drawing survives restarts and loads instantly for every visitor.  
-Built for the #ts v2 YSWS (which never released). 
 Built with TS (obviously), Express.js and EJS.  
 
 # Features
