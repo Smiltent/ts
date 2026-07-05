@@ -1,5 +1,5 @@
 {
-  "name": "new-folder",
+  "name": "ts",
   "module": "index.ts",
   "type": "module",
   "private": true,
