@@ -18,6 +18,9 @@ interface Stroke {
 }
 
 type Tool = "pencil" | "marker" | "erase" | "move"
+type Undo = 
+    | { kind: "add", stroke: Stroke, op: Operation }
+    | { kind: "erase", strokes: Stroke[], op: Operation }
 
 // elements
 const tsCanvas = document.getElementById("tsCanvas") as unknown as SVGSVGElement
@@ -45,6 +48,10 @@ const tsButtonSlack = document.getElementById("tsButtonSlack") as HTMLButtonElem
 const tsPopupSlack = document.getElementById("tsPopupSlack") as HTMLButtonElement
 
 const openSlack = () => window.open("https://hackclub.enterprise.slack.com/archives/C09B42CLL72", "_blank")
+
+// undo / redo
+const undoStack: Undo[] = []
+const redoStack: Undo[] = []
 
 // state
 const tsCanvasWidth: number = 10000
@@ -85,6 +92,43 @@ function isOnMobile() {
     return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(
         navigator.userAgent
     )
+}
+
+function undo() {
+    const action = undoStack.pop()
+    if (!action) return
+
+    tsOperations.pop()
+    if (action.kind === "add") {
+        action.stroke.element.remove()
+        strokes = strokes.filter(s => s.id !== action.stroke.id)
+    } else {
+        for (const s of action.strokes) {
+            tsCanvas.appendChild(s.element)
+            strokes.push(s)
+        }
+    }
+    
+    redoStack.push(action)
+}
+
+function redo() {
+    const action = redoStack.pop()
+    if (!action) return
+
+    tsOperations.push(action.op)
+    if (action.kind === "add") {
+        tsCanvas.appendChild(action.stroke.element)
+        strokes.push(action.stroke)
+    } else {
+        const ids = new Set(action.strokes.map(s => s.id))
+        for (const s of action.strokes) {
+            s.element.remove()
+        }
+        strokes = strokes.filter(s => !ids.has(s.id))
+    }
+    
+    undoStack.push(action)
 }
 
 // center it based off the users viewport
@@ -269,20 +313,23 @@ function updateMarkerPath(element: SVGPathElement, pts: Coord[]) {
 function eraseAt(x: number, y: number) {
     const r = tsEraserScreenPx / scale
     const nextStrokes: Stroke[] = []
-    const erasedIds: string[] = []
+    const erased: Stroke[] = []
 
     for (const s of strokes) {
         const hit = s.points.some(p => Math.hypot(p.x - x, p.y - y) < r)
         if (hit) {
             s.element.remove()
-            erasedIds.push(s.id)
+            erased.push(s)
         } else {
             nextStrokes.push(s)
         }
     }
 
-    if (erasedIds.length > 0) {
-        tsOperations.push({ op: "erase", ids: erasedIds, replacements: [] })
+    if (erased.length > 0) {
+        const op: Operation = { op: "erase", ids: erased.map(s => s.id), replacements: []}
+        tsOperations.push(op)
+        undoStack.push({ kind: "erase", strokes: erased, op })
+        redoStack.length = 0
     }
 
     strokes = nextStrokes
@@ -373,9 +420,14 @@ tsViewport?.addEventListener('pointerup', e => {
     if (tool === "pencil" && currentElement) {
         if (points.length >= 2) {
             const id = currentElement.dataset.id!
+
+            const stroke: Stroke = { id, color: strokeColor, baseWidth: strokeWidth, points, element: currentElement }
+            const op: Operation = { op: "add", type: "pencil", id, color: strokeColor, baseWidth: strokeWidth, points }
             
-            strokes.push({ id, color: strokeColor, baseWidth: strokeWidth, points, element: currentElement })
-            tsOperations.push({ op: "add", type: "pencil", id, color: strokeColor, baseWidth: strokeWidth, points })
+            strokes.push(stroke)
+            tsOperations.push(op)
+            undoStack.push({ kind: "add", stroke, op })
+            redoStack.length = 0
         } else {
             currentElement.remove()
         }
@@ -403,9 +455,8 @@ tsViewport.addEventListener('wheel', e => {
     zoom(e.deltaY < 0 ? 1.1 : 0.91, e.clientX, e.clientY)
 }, { passive: false })
 
-tsButtonSlack.addEventListener('click', e => {
-    window.open("https://hackclub.enterprise.slack.com/archives/C09B42CLL72", "_blank")
-})
+tsButtonSlack?.addEventListener("click", openSlack)
+tsPopupSlack?.addEventListener("click", openSlack)
 
 tsPopupClose.addEventListener('click', e => {
     localStorage.setItem("nonononodontshowmethatpopupeveragainoriwillcallmylawyersandsaythatyouareameanie", "true")
@@ -415,6 +466,21 @@ tsPopupClose.addEventListener('click', e => {
 
 // keybinds
 document.addEventListener("keydown", e => {
+    if (e.ctrlKey || e.metaKey) {
+        const k = e.key.toLowerCase()
+        if (k === "z") {
+            e.preventDefault()
+            e.shiftKey ? redo(): undo()
+        }
+
+        if (k === "y") {
+            e.preventDefault()
+            redo()
+        }
+
+        return
+    }
+
     if (e.key === "1") setTool("move")
     if (e.key === "2") setTool("marker")
     if (e.key === "3") setTool("pencil")
