@@ -13,13 +13,13 @@ export default class ServerService {
         this.app = express()
 
         this.app.set("view engine", "ejs")
+        this.app.use(compression())
         this.app.use("/public", express.static("public"))
 
-        this.app.use(cookieParser())
+        this.app.use(cookieParser(process.env.COOKIE_SECRET))
         this.app.use("/d/save", express.raw({ type: "application/octet-stream", limit: "50mb" }))
 
         this.app.use(express.json())
-        this.app.use(compression())
         this.app.use(express.urlencoded({ extended: true }))
 
         this.app.use("/auth", authRoutes)
