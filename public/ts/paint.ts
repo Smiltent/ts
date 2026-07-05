@@ -1,5 +1,5 @@
 
-import type { Coord, OpAdd, OpErase, Operation } from "../../types/types"
+import type { Coord, Operation } from "../../types/types"
 
 // types
 interface CoordPoint {
@@ -20,7 +20,7 @@ interface Stroke {
 type Tool = "pencil" | "marker" | "erase" | "move"
 
 // elements
-const tsCanvas = document.getElementById("tsCanvas") as unknown as HTMLElement
+const tsCanvas = document.getElementById("tsCanvas") as unknown as SVGSVGElement
 const tsViewport = document.getElementById("tsViewport") as HTMLElement
 const tsWorld = document.getElementById("tsWorld") as HTMLElement
 
@@ -42,6 +42,9 @@ const tsColorPickerInput = document.getElementById("tsColorPickerInput") as HTML
 const tsPopup = document.getElementById("tsPopup") as HTMLElement
 const tsPopupClose = document.getElementById("tsPopupClose") as HTMLButtonElement
 const tsButtonSlack = document.getElementById("tsButtonSlack") as HTMLButtonElement
+const tsPopupSlack = document.getElementById("tsPopupSlack") as HTMLButtonElement
+
+const openSlack = () => window.open("https://hackclub.enterprise.slack.com/archives/C09B42CLL72", "_blank")
 
 // state
 const tsCanvasWidth: number = 10000
@@ -197,10 +200,10 @@ function updateStrokePath(element: SVGPathElement, pts: Coord[], baseWidth: numb
 
 function buildOutline(pts: Coord[], baseWidth: number): CoordPoint[] {
     const n = pts.length
-    const lengths: number[] = [0]
-    for (let i = 1; i < n; i++) {
-        lengths.push(lengths[i-1]! + Math.hypot(pts[i]!.x - pts[i-1]!.x, pts[i]!.y - pts[i-1]!.y))
-    }
+    // const lengths: number[] = [0]
+    // for (let i = 1; i < n; i++) {
+    //     lengths.push(lengths[i-1]! + Math.hypot(pts[i]!.x - pts[i-1]!.x, pts[i]!.y - pts[i-1]!.y))
+    // }
 
     return pts.map((p, i) => {
         const hw = width(baseWidth)
@@ -316,6 +319,12 @@ tsViewport?.addEventListener('pointerdown', (e: PointerEvent) => {
     }
 })
 
+tsViewport?.addEventListener('pointercancel', () => {
+    isPanning = false
+    panStart = null
+    tsViewport.classList.remove('grabbing')
+})
+
 tsViewport?.addEventListener('pointermove', e => {
     if (tsIsPinching) return
 
@@ -352,7 +361,7 @@ tsViewport?.addEventListener('pointermove', e => {
 })
 
 tsViewport?.addEventListener('pointerup', e => {
-    if (e.button === 2 || e.button === 1) {
+    if (isPanning) {
         isPanning = false
         panStart = null
 

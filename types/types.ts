@@ -35,5 +35,4 @@ export interface StrokeRecord {
 
 export interface DrawingRecord {
     ops: Operation[]
-    strokes: StrokeRecord[]
 }

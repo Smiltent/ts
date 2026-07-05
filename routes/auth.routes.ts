@@ -36,7 +36,7 @@ router.get(`/callback`, async (req, res) => {
         if (!tokenRes.ok) {
             const err = await tokenRes.text()
             console.error(`Token exchange fail: ${err}`)
-            res.status(401).send("Authentication error")
+            return res.status(401).send("Authentication error")
         }
 
         const tokenData = await tokenRes.json() as { 
@@ -67,6 +67,7 @@ router.get(`/callback`, async (req, res) => {
         })
 
         res.cookie("hcsession", Buffer.from(session).toString("base64"), {
+            signed: true,
             httpOnly: true,
             sameSite: "lax",
             maxAge: 1000 * 60 * 60 * 24 * 30,
@@ -76,7 +77,7 @@ router.get(`/callback`, async (req, res) => {
         res.redirect("/")
     } catch (err) {
         console.error(`Auth callback error: ${err}`)
-        res.status(500).send("Internal server error")
+        return res.status(500).send("Internal server error")
     }
 })
 

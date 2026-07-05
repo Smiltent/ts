@@ -1,10 +1,11 @@
 
 import type { DrawingRecord } from "../types/types"
+// @ts-ignore // WHY ARE YOU ERRORING PLEASE STOp
 import Database from "bun:sqlite"
 
 export default class DatabaseService {
     private database: Database
-    private drawing: DrawingRecord = { ops: [], strokes: [] }
+    private drawing: DrawingRecord = { ops: [] }
 
     constructor(private dbFile: string) {
         this.database = new Database(this.dbFile)
@@ -16,14 +17,13 @@ export default class DatabaseService {
         `)
 
         const row = this.database.query("SELECT data FROM drawings WHERE id = 1").get() as { data: string } | null
-        this.drawing = row ? JSON.parse(row.data) : { ops: [], strokes: [] }
+        this.drawing = row ? JSON.parse(row.data) : { ops: [] }
     }
 
     public getDrawing(): DrawingRecord { return this.drawing }
     public saveDrawing(drawing: DrawingRecord): Boolean {
         const merged: DrawingRecord = {
-            ops: [...this.drawing.ops, ...drawing.ops],
-            strokes: drawing.strokes 
+            ops: [...this.drawing.ops, ...drawing.ops]
         }
 
         this.drawing = merged

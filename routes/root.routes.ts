@@ -1,20 +1,19 @@
 
-import type { StrokeRecord } from "../types/types"
 import { Router, type Request } from "express"
 import { promisify } from "util"
-import zlib from "zlib"
 import { db } from ".."
+import zlib from "zlib"
 
 const gunzip = promisify(zlib.gunzip)
 const router = Router()
 
-const anyoneIsAnAdmin = String(process.env.BYPASS_ADMIN) == "true" ? false : true
+const enfoceAdmin = String(process.env.BYPASS_ADMIN) == "true" ? false : true
 
 //
 //
 //
 function getUser(req: Request) {
-    const raw = req.cookies?.hcsession
+    const raw = req.signedCookies?.hcsession
     if (!raw) return null
 
     try {
@@ -51,7 +50,7 @@ router.get("/", (req, res) => {
 router.post(`/d/save`, async (req, res) => {
     const user = getUser(req)
 
-    if (!user || !isAdminUser(user.email) && anyoneIsAnAdmin) {
+    if (!user || (enfoceAdmin && !isAdminUser(user.email))) {
         return res.status(403).send("no") // i couldn't think of a better error message
     }
 
@@ -65,22 +64,24 @@ router.post(`/d/save`, async (req, res) => {
             return res.status(400).json({ error: "Invalid data!" })
         }
 
-        const strokeMap = new Map<string, StrokeRecord>()
-        for (const op of ops) {
-            if (op.op === "add") {
-                strokeMap.set(op.id, { id: op.id, color: op.color, baseWidth: op.baseWidth, points: op.points })
-            } else if (op.op === "erase") {
-                for (const id of op.ids) strokeMap.delete(id)
-                for (const r of op.replacements) strokeMap.set(r.id, r)
-            }
-        }
+        // const strokeMap = new Map<string, StrokeRecord>()
+        // for (const op of ops) {
+        //     if (op.op === "add") {
+        //         strokeMap.set(op.id, { id: op.id, color: op.color, baseWidth: op.baseWidth, points: op.points })
+        //     } else if (op.op === "erase") {
+        //         for (const id of op.ids) strokeMap.delete(id)
+        //         for (const r of op.replacements) strokeMap.set(r.id, r)
+        //     }
+        // }
 
-        const drawing = { ops, strokes: Array.from(strokeMap.values()) as StrokeRecord[] }
-        const result = db.saveDrawing(drawing)
+        // const drawing = { ops, strokes: Array.from(strokeMap.values()) as StrokeRecord[] }
+        // const result = db.saveDrawing(drawing)
 
+
+        const result = db.saveDrawing({ ops })
         if (!result) return res.status(500).json({ error: "Failed to save drawing!" })
 
-        res.status(200).redirect("/")
+        res.sendStatus(200)
     } catch (err) {
         console.error("Save route error:", err) 
         res.status(400).json({ error: "Failed to parse body" })
