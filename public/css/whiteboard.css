@@ -10,13 +10,20 @@
     transform: translate(-50%, -50%);
     z-index: 100;
 
-    background-color: white;
-    border: 1px solid black;
+    background-color: var(--base);
+    color: var(--text);
+    border: 1px solid var(--surface1);
+    box-shadow: 0 16px 48px rgba(17, 17, 17, 0.6);
+
     border-radius: 1rem;
     padding: 2.5rem;
 
     width: 300px;
     max-width: 300px;
+}
+
+#tsPopup h1 {
+    color: var(--mauve);
 }
 
 #tsPopup .tsButtonsPopup .tsButtons {
@@ -63,7 +70,7 @@
 
     width: var(--canvas-size-width);
     height: var(--canvas-size-height);
-    background-color: var(--surface);
+    background-color: var(--base);
 
     inset: 0;
 }

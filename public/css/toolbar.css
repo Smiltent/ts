@@ -8,13 +8,23 @@
 
     display: flex;
     align-items: center;
-    gap: 4px;
+
+    background-color: var(--base);
+    border: 1px solid var(--surface1);
+    padding: 8px 12px;
+    border-radius: 16px;
+    gap: 10px;
 }
 
 .tsToolGroup {
     display: flex;
     align-items: center;
     gap: 5px;
+}
+
+.tsToolGroup:not(:last-child) {
+    padding-right: 10px;
+    border-radius: 1px solid var(--surface1);
 }
 
 .tsBrushGroup {
@@ -26,7 +36,6 @@
 
 .tsToolBtn {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
 
@@ -34,18 +43,15 @@
 
     width: 45px;
     height: 45px;
-    border: 1px solid black;
     border-radius: 12px;
-    background-color: rgba(203, 203, 203, 0.655);
+    background-color: transparent;
+
+    border: 2px solid transparent;
+    color: var(--text);
 }
 
-.tsToolBtn:hover {
-    background-color: rgba(255, 255, 255, 0.1);;
-}
-
-.tsToolBtn.active {
-    background-color: rgba(255, 255, 255, 0.455);
-}
+.tsToolBtn:hover {transform: scale(1.1);}
+.tsToolBtn.active {border-color: var(--mauve);}
 
 .tsBrushSlider {
     appearance: none;
@@ -61,30 +67,39 @@
     width: 34px;
     height: 34px;
     border-radius: 100%;
-    border: 1px solid transparent;
+    border: 2px solid transparent;
     background: transparent;
 
     cursor: pointer;
 
     position: relative;
 }
+.tsColorBtn.active {
+    border-color: var(--mauve);
+}
 
 .tsColorPickerBtn {
     overflow: hidden;
-
-    border: 1px solid black;
+    border: 2px solid var(--surface1);
 }
+.tsColorPickerBtn.active { border-color: var(--mauve);}
 
 .tsColorSwitch {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
     display: block;
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
     pointer-events: none;
+
+    border: 2px solid var(--surface1);
 }
 
 #tsBrushSizeLabel {
-    width: 20px;
+    color: var(--subtext);
+    text-align: center;
+
+    width: 3ch;
+    font-variant-numeric: tabular-nums;
 }
 
 #tsColorPickerInput {

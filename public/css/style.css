@@ -5,15 +5,27 @@
 }
 
 :root {
-    --bg: #d2d2d2;
-    --surface: #ffffff;
+    --base: #eff1f5;
+    --mantle: #e6e9ef;
+    --crust: #dce0e8;
+    --text: #4c4f69;
+    --subtext: #6c6f85;
+    --surface0: #ccd0da;
+    --surface1: #bcc0cc;
+    --overlay: #9ca0b0;
+    --blue: #1e66f5;
+    --green: #40a02b;
+    --red: #d20f39;
+    --mauve: #8839ef;
+    --peach: #fe640b;
 
     --canvas-size-width: 10000px;
     --canvas-size-height: 10000px;
 }
 
 body {
-    background-color: var(--bg);
+    background-color: var(--mantle);
+    color: var(--text);
     font-family: sans-serif; 
 }
 
@@ -38,15 +50,19 @@ body {
 }
 
 .tsButton {
-    padding: 3px 15px;
+    padding: 5px 16px;
+    color: var(--text);
 
     cursor: pointer;
     
-    border: 1px black solid;
+    border: 1px var(--surface1) solid;
     border-radius: 4px;
-    background-color: white;
+    background-color: var(--base);
 }
-.tsButton:hover { background-color: #e8e8e8; }
+.tsButton:hover { 
+    background-color: var(--crust); 
+    border-color: var(--overlay);
+}
 
 #tsAuth {
     position: fixed;
@@ -55,6 +71,14 @@ body {
     z-index: 99;
     display: flex;
     align-items: center;
+
+    color: var(--subtext)
+}
+#tsAuth a {
+    color: var(--mauve);
+}
+#tsAuth a:hover {
+    color: var(--blue);
 }
 
 #tsAuth *:not(:last-child) {
