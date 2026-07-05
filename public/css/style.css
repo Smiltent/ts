@@ -72,17 +72,29 @@ body {
     display: flex;
     align-items: center;
 
-    color: var(--subtext)
+    font-size: 14px;
+
+    color: var(--text)
 }
-#tsAuth a {
-    color: var(--mauve);
-}
-#tsAuth a:hover {
-    color: var(--blue);
+#tsAuth a {color: var(--mauve);}
+#tsAuth a:hover {color: var(--blue);}
+#tsAuth *:not(:last-child) {padding-right: 5px;}
+
+#tsAuth:has(.tsAuthEmail) {
+    gap: 8px;
+    padding: 5px 16px;
+
+    color: var(--text);
+    border: 1px solid var(--surface1);
+    border-radius: 4px;
+    background-color: var(--base);
 }
 
-#tsAuth *:not(:last-child) {
-    padding-right: 5px;
+.tsAuthEmail {
+    padding-right: 8px;
+
+    user-select: none;
+    cursor: default;
 }
 
 #tsFirstPopup {

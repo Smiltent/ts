@@ -17,15 +17,20 @@
     <% if (user) { %>
         <div id="tsAuth">
             <span class="tsAuthEmail"><%= user.email %></span>
-            <span>|</span>
             <a href="/auth/logout">
                 logout
             </a>
         </div>
+    <% } else { %>
+        <div id="tsAuth">
+            <form action="/auth" method="GET">
+                <button class="tsButton tsLoginButton">login</button>
+            </form>
+        </div>
     <% } %>
 
     <div class="tsButtons">
-        <button class="tsButton" id="tsButtonSlack">slack channel (#ts)</button>
+        <button class="tsButton" id="tsPopupSlack">slack channel (#ts)</button>
         <% if (isAdmin) { %>
             <button class="tsButton" id="tsSaveButton">save</button>
         <% } %>
