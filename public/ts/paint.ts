@@ -439,8 +439,14 @@ tsViewport?.addEventListener('pointerup', e => {
             const id = currentElement.dataset.id!
             const mw = strokeWidth * 5
 
-            strokes.push({ id, color: strokeColor, baseWidth: mw, points, element: currentElement })
-            tsOperations.push({ op: "add", type: "marker", id, color: strokeColor, baseWidth: mw, points })
+            const stroke: Stroke = { id, color: strokeColor, baseWidth: mw, points, element: currentElement }
+            const op: Operation = { op: "add", type: "marker", id, color: strokeColor, baseWidth: mw, points }
+
+            strokes.push(stroke)
+            tsOperations.push(op)
+
+            undoStack.push({ kind: "add", stroke, op })
+            redoStack.length = 0 
         } else {
             currentElement.remove()
         }
