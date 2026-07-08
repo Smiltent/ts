@@ -14,7 +14,7 @@ Built with TS (obviously), Express.js and EJS.
 * Drawing tools - pencil & marker with color switching and adjustable brush sizing
 
 # Demo Video
-(click me!!!)[https://youtu.be/ekQFitQqf8A]
+[click me!!!](https://youtu.be/ekQFitQqf8A)
 
 # Demo Site (only during Hack Club Horizons review)
 You can view the example instance running @ https://ts.quack.zip/  
